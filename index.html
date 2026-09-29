@@ -1,439 +1,409 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#111827">
 <title>Гостиница</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 body {
+    margin: 0;
     font-family: Arial, sans-serif;
-    background: #0b1120;
-    color: #f8fafc;
-    min-height: 100vh;
+    background: #111827;
+    color: #fff;
 }
 
-/* ===== ШАПКА ===== */
+button,
+input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* LOGIN */
+
+#loginScreen {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    background: #1f2937;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 15px 50px rgba(0,0,0,.4);
+}
+
+.login-box h1 {
+    text-align: center;
+    margin-top: 0;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 13px;
+    margin: 8px 0;
+    border: 1px solid #374151;
+    border-radius: 10px;
+    background: #111827;
+    color: white;
+    outline: none;
+}
+
+.login-box button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+}
+
+.login-box button:hover {
+    background: #1d4ed8;
+}
+
+#errorMessage {
+    color: #f87171;
+    text-align: center;
+    margin-top: 12px;
+}
+
+/* APP */
 
 header {
-    background: #111827;
-    padding: 20px;
-    border-bottom: 1px solid #263244;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.header-content {
-    max-width: 1200px;
-    margin: auto;
+    background: #1f2937;
+    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 15px;
+    flex-wrap: wrap;
+    box-shadow: 0 3px 15px rgba(0,0,0,.25);
 }
 
-.logo {
+header h1 {
+    margin: 0;
     font-size: 24px;
-    font-weight: bold;
 }
 
-.header-info {
-    color: #94a3b8;
+.user-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.user-email {
+    color: #9ca3af;
     font-size: 14px;
 }
 
-/* ===== ОСНОВА ===== */
+.logout-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 9px 14px;
+    border-radius: 9px;
+}
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: auto;
-    padding: 25px 20px;
+    padding: 20px;
 }
 
-/* ===== СТАТИСТИКА ===== */
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
+.section {
+    margin-bottom: 30px;
 }
 
-.stat {
-    background: #111827;
-    border: 1px solid #263244;
-    border-radius: 16px;
-    padding: 18px;
-}
-
-.stat-title {
-    color: #94a3b8;
-    font-size: 14px;
-    margin-bottom: 8px;
-}
-
-.stat-value {
-    font-size: 25px;
-    font-weight: bold;
-}
-
-/* ===== КНОПКИ ===== */
-
-button {
-    border: none;
-    border-radius: 10px;
-    padding: 11px 16px;
-    color: white;
-    background: #2563eb;
-    cursor: pointer;
-    font-size: 14px;
-    transition: 0.2s;
-}
-
-button:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.12);
-}
-
-button:active {
-    transform: scale(0.97);
-}
-
-.btn-green {
-    background: #16a34a;
-}
-
-.btn-red {
-    background: #dc2626;
-}
-
-.btn-gray {
-    background: #374151;
-}
-
-.btn-orange {
-    background: #d97706;
-}
-
-/* ===== ЗАГОЛОВКИ ===== */
-
-.section-title {
-    font-size: 21px;
+.section h2 {
     margin-bottom: 15px;
 }
 
-/* ===== НОМЕРА ===== */
+/* ROOMS */
 
 .rooms {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 15px;
-    margin-bottom: 35px;
 }
 
 .room {
-    background: #111827;
-    border: 1px solid #263244;
-    border-radius: 18px;
+    background: #1f2937;
+    border-radius: 16px;
     padding: 18px;
-    position: relative;
+    border: 2px solid #374151;
+    transition: .2s;
+}
+
+.room:hover {
+    transform: translateY(-2px);
 }
 
 .room.free {
-    border-color: #14532d;
+    border-color: #16a34a;
 }
 
 .room.busy {
-    border-color: #7f1d1d;
+    border-color: #dc2626;
 }
 
-.room-number {
-    font-size: 23px;
-    font-weight: bold;
-    margin-bottom: 8px;
+.room h3 {
+    margin-top: 0;
+    font-size: 21px;
 }
 
 .status {
     display: inline-block;
     padding: 5px 9px;
-    border-radius: 20px;
-    font-size: 12px;
-    margin-bottom: 12px;
+    border-radius: 7px;
+    font-size: 13px;
+    margin-bottom: 10px;
 }
 
 .status.free {
     background: #14532d;
-    color: #bbf7d0;
+    color: #86efac;
 }
 
 .status.busy {
     background: #7f1d1d;
-    color: #fecaca;
+    color: #fca5a5;
 }
 
 .room-info {
-    color: #cbd5e1;
-    font-size: 14px;
-    line-height: 1.7;
-    margin-bottom: 14px;
+    color: #d1d5db;
+    line-height: 1.6;
+    min-height: 95px;
 }
 
 .room-buttons {
     display: flex;
     gap: 8px;
+    margin-top: 12px;
 }
 
 .room-buttons button {
     flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 9px;
+    color: white;
 }
 
-/* ===== БЛОКИ ===== */
-
-.panel {
-    background: #111827;
-    border: 1px solid #263244;
-    border-radius: 18px;
-    padding: 20px;
-    margin-bottom: 25px;
+.checkin-btn {
+    background: #16a34a;
 }
 
-/* ===== ВЫРУЧКА ===== */
+.checkout-btn {
+    background: #dc2626;
+}
 
-.income-item,
-.receipt-item,
-.note-item {
-    background: #0b1120;
-    border: 1px solid #263244;
+/* BUTTONS */
+
+.action-btn {
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 9px;
+    margin: 4px;
+}
+
+.blue {
+    background: #2563eb;
+}
+
+.green {
+    background: #16a34a;
+}
+
+.red {
+    background: #dc2626;
+}
+
+.gray {
+    background: #4b5563;
+}
+
+/* TABLE */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1f2937;
     border-radius: 12px;
-    padding: 14px;
-    margin-bottom: 10px;
+    overflow: hidden;
 }
 
-.item-top {
+th,
+td {
+    padding: 11px;
+    border-bottom: 1px solid #374151;
+    text-align: left;
+}
+
+th {
+    background: #374151;
+}
+
+.empty {
+    color: #9ca3af;
+    text-align: center;
+    padding: 20px;
+}
+
+/* NOTES */
+
+.note {
+    background: #1f2937;
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    margin-bottom: 7px;
 }
 
-.item-info {
-    color: #94a3b8;
-    font-size: 13px;
-    line-height: 1.6;
+.note-text {
+    white-space: pre-wrap;
 }
 
-.amount {
-    font-weight: bold;
-    color: #4ade80;
-}
-
-.item-buttons {
-    display: flex;
-    gap: 7px;
-    margin-top: 10px;
-}
-
-/* ===== ЗАМЕТКИ ===== */
-
-.note-form {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.note-form input {
-    flex: 1;
-}
-
-/* ===== ПОЛЯ ===== */
-
-input,
-select,
-textarea {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #334155;
-    background: #0f172a;
-    color: white;
-    outline: none;
-    font-size: 15px;
-}
-
-input:focus,
-textarea:focus {
-    border-color: #3b82f6;
-}
-
-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-/* ===== МОДАЛЬНОЕ ОКНО ===== */
+/* MODAL */
 
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.72);
-    backdrop-filter: blur(5px);
-    display: none;
+    background: rgba(0,0,0,.65);
+    display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
     z-index: 1000;
 }
 
-.modal-overlay.active {
-    display: flex;
-}
-
 .modal {
-    width: min(500px, 100%);
-    max-height: 90vh;
-    overflow-y: auto;
-    background: #111827;
-    border: 1px solid #334155;
-    border-radius: 22px;
-    padding: 24px;
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
-    animation: modalOpen 0.2s ease;
+    width: 100%;
+    max-width: 500px;
+    background: #1f2937;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    animation: modalIn .2s ease;
 }
 
-@keyframes modalOpen {
+@keyframes modalIn {
     from {
         opacity: 0;
-        transform: scale(0.92) translateY(10px);
+        transform: scale(.92);
     }
     to {
         opacity: 1;
-        transform: scale(1) translateY(0);
+        transform: scale(1);
     }
 }
 
 .modal h2 {
-    margin-bottom: 20px;
+    margin-top: 0;
 }
 
-.form-group {
-    margin-bottom: 14px;
+.modal input,
+.modal textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 7px 0;
+    background: #111827;
+    color: white;
+    border: 1px solid #374151;
+    border-radius: 9px;
+    outline: none;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 6px;
-    color: #cbd5e1;
-    font-size: 14px;
+.modal textarea {
+    min-height: 120px;
+    resize: vertical;
 }
 
 .modal-buttons {
     display: flex;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 .modal-buttons button {
     flex: 1;
+    border: none;
+    padding: 11px;
+    border-radius: 9px;
+    color: white;
 }
 
-/* ===== ЧЕК ===== */
-
-.receipt {
-    background: white;
-    color: #111;
-    padding: 20px;
-    border-radius: 12px;
+.close-btn {
+    background: #4b5563;
 }
 
-.receipt h3 {
-    text-align: center;
-    margin-bottom: 15px;
+.save-btn {
+    background: #2563eb;
 }
 
-.receipt-line {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 7px 0;
-    border-bottom: 1px solid #ddd;
-}
+/* MOBILE */
 
-/* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
-
-@media (max-width: 800px) {
-
-    .stats {
-        grid-template-columns: repeat(2, 1fr);
+@media (max-width: 1000px) {
+    .rooms {
+        grid-template-columns: repeat(3, 1fr);
     }
+}
 
+@media (max-width: 700px) {
     .rooms {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .header-content {
+    header {
         align-items: flex-start;
-        flex-direction: column;
     }
 }
 
-@media (max-width: 550px) {
-
-    header {
-        padding: 15px;
-    }
-
-    .container {
-        padding: 15px;
-    }
-
-    .logo {
-        font-size: 21px;
-    }
-
-    .stats {
-        gap: 10px;
-    }
-
-    .stat {
-        padding: 14px;
-    }
-
-    .stat-value {
-        font-size: 21px;
-    }
-
+@media (max-width: 480px) {
     .rooms {
         grid-template-columns: 1fr;
     }
 
+    .container {
+        padding: 12px;
+    }
+
     .room {
-        padding: 16px;
+        padding: 15px;
     }
 
-    .note-form {
-        flex-direction: column;
-    }
-
-    .modal {
-        padding: 19px;
-        border-radius: 18px;
-    }
-
-    .modal-buttons {
-        flex-direction: column;
-    }
-
-    button {
-        min-height: 44px;
+    th,
+    td {
+        font-size: 13px;
+        padding: 8px;
     }
 }
 </style>
@@ -441,300 +411,408 @@ textarea {
 
 <body>
 
+<!-- LOGIN -->
+
+<div id="loginScreen">
+    <div class="login-box">
+        <h1>🏨 Гостиница</h1>
+
+        <input
+            id="loginEmail"
+            type="email"
+            placeholder="Электронная почта"
+        >
+
+        <input
+            id="loginPassword"
+            type="password"
+            placeholder="Пароль"
+        >
+
+        <button onclick="login()">Войти</button>
+
+        <div id="errorMessage"></div>
+    </div>
+</div>
+
+
+<!-- APPLICATION -->
+
+<div id="app" class="hidden">
+
 <header>
-    <div class="header-content">
-        <div class="logo">🏨 Гостиница</div>
-        <div class="header-info">Система управления гостиницей</div>
+    <h1>🏨 Управление гостиницей</h1>
+
+    <div class="user-area">
+        <span class="user-email" id="userEmail"></span>
+        <button class="logout-btn" onclick="logout()">Выйти</button>
     </div>
 </header>
 
+
 <div class="container">
 
-    <!-- СТАТИСТИКА -->
+    <!-- ROOMS -->
 
-    <div class="stats">
+    <section class="section">
+        <h2>🛏 Номера</h2>
+        <div id="rooms" class="rooms"></div>
+    </section>
 
-        <div class="stat">
-            <div class="stat-title">Всего номеров</div>
-            <div class="stat-value" id="totalRooms">12</div>
+
+    <!-- INCOME -->
+
+    <section class="section">
+        <h2>💰 Доход</h2>
+
+        <button class="action-btn blue" onclick="openIncomeModal()">
+            + Добавить оплату
+        </button>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Номер</th>
+                        <th>Гость</th>
+                        <th>Гостей</th>
+                        <th>Сумма</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody id="incomeTable"></tbody>
+            </table>
         </div>
 
-        <div class="stat">
-            <div class="stat-title">Свободно</div>
-            <div class="stat-value" id="freeRooms">12</div>
+        <h3>
+            Общий доход:
+            <span id="totalIncome">0</span> сомони
+        </h3>
+    </section>
+
+
+    <!-- RECEIPTS -->
+
+    <section class="section">
+        <h2>🧾 Квитанции</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Номер</th>
+                        <th>Гость</th>
+                        <th>Гостей</th>
+                        <th>Дней</th>
+                        <th>Сумма</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+
+                <tbody id="receiptsTable"></tbody>
+            </table>
         </div>
+    </section>
 
-        <div class="stat">
-            <div class="stat-title">Занято</div>
-            <div class="stat-value" id="busyRooms">0</div>
-        </div>
 
-        <div class="stat">
-            <div class="stat-title">Выручка сегодня</div>
-            <div class="stat-value" id="todayIncome">0 с</div>
-        </div>
+    <!-- NOTES -->
 
-    </div>
+    <section class="section">
+        <h2>📝 Заметки</h2>
 
-    <!-- НОМЕРА -->
-
-    <div class="section-title">Номера</div>
-
-    <div class="rooms" id="rooms"></div>
-
-    <!-- ВЫРУЧКА -->
-
-    <div class="panel">
-
-        <div class="section-title">💰 Выручка за сегодня</div>
-
-        <div id="incomeList"></div>
-
-    </div>
-
-    <!-- ЧЕКИ -->
-
-    <div class="panel">
-
-        <div class="section-title">🧾 Сохранённые чеки</div>
-
-        <div id="receiptsList"></div>
-
-    </div>
-
-    <!-- ЗАМЕТКИ -->
-
-    <div class="panel">
-
-        <div class="section-title">📝 Заметки по гостинице</div>
-
-        <div class="note-form">
-            <input
-                id="noteInput"
-                type="text"
-                placeholder="Например: в номере №4 перегорела лампа"
-            >
-            <button onclick="addNote()">Добавить</button>
-        </div>
+        <button class="action-btn blue" onclick="openNoteModal()">
+            + Добавить заметку
+        </button>
 
         <div id="notesList"></div>
-
-    </div>
-
-</div>
-
-<!-- ========================= -->
-<!-- ОКНО ЗАСЕЛЕНИЯ -->
-<!-- ========================= -->
-
-<div class="modal-overlay" id="checkInModal">
-
-    <div class="modal">
-
-        <h2>🏨 Заселение</h2>
-
-        <div class="form-group">
-            <label>Номер</label>
-            <input id="modalRoomNumber" disabled>
-        </div>
-
-        <div class="form-group">
-            <label>Имя гостя — необязательно</label>
-            <input
-                id="guestName"
-                type="text"
-                placeholder="Например: Али"
-            >
-        </div>
-
-        <div class="form-group">
-            <label>Телефон — необязательно</label>
-            <input
-                id="guestPhone"
-                type="tel"
-                placeholder="+992..."
-            >
-        </div>
-
-        <div class="form-group">
-            <label>Количество гостей</label>
-            <input
-                id="guestCount"
-                type="number"
-                min="1"
-                value="1"
-            >
-        </div>
-
-        <div class="form-group">
-            <label>Количество суток</label>
-            <input
-                id="stayDays"
-                type="number"
-                min="1"
-                value="1"
-            >
-        </div>
-
-        <div class="form-group">
-            <label>Сколько гость реально заплатил</label>
-            <input
-                id="paymentAmount"
-                type="number"
-                min="0"
-                placeholder="Например: 250"
-            >
-        </div>
-
-        <div class="modal-buttons">
-            <button class="btn-gray" onclick="closeModal('checkInModal')">
-                Отмена
-            </button>
-
-            <button class="btn-green" onclick="confirmCheckIn()">
-                Заселить
-            </button>
-        </div>
-
-    </div>
+    </section>
 
 </div>
-
-<!-- ========================= -->
-<!-- ОКНО ЧЕКА -->
-<!-- ========================= -->
-
-<div class="modal-overlay" id="receiptModal">
-
-    <div class="modal">
-
-        <h2>🧾 Чек</h2>
-
-        <div id="receiptContent"></div>
-
-        <div class="modal-buttons">
-
-            <button class="btn-gray" onclick="closeModal('receiptModal')">
-                Закрыть
-            </button>
-
-            <button onclick="printReceipt()">
-                🖨 Печать
-            </button>
-
-        </div>
-
-    </div>
-
 </div>
 
-<!-- ========================= -->
-<!-- ОКНО ПОДТВЕРЖДЕНИЯ -->
-<!-- ========================= -->
 
-<div class="modal-overlay" id="confirmModal">
+<!-- MODAL -->
 
-    <div class="modal">
-
-        <h2 id="confirmTitle">Подтверждение</h2>
-
-        <p id="confirmText" style="color:#cbd5e1; line-height:1.6;"></p>
-
-        <div class="modal-buttons">
-
-            <button class="btn-gray" onclick="closeModal('confirmModal')">
-                Отмена
-            </button>
-
-            <button class="btn-red" id="confirmButton">
-                Подтвердить
-            </button>
-
-        </div>
-
-    </div>
-
+<div id="modalOverlay" class="modal-overlay hidden">
+    <div class="modal" id="modalContent"></div>
 </div>
+
 
 <script>
 
-/* =========================================
-   ДАННЫЕ
-========================================= */
+/* =========================
+   SUPABASE
+========================= */
 
-let rooms = [];
+const SUPABASE_URL =
+    "https://xvtjibuyizqxpmnrzjud.supabase.co";
 
-for (let i = 1; i <= 12; i++) {
+const SUPABASE_KEY =
+    "sb_publishable_30kUdyYOPTZM_1sJL_phtQ_DuMp_plZ";
 
-    rooms.push({
-        number: i,
-        status: "free",
-        guest: "",
-        phone: "",
-        guestCount: 0,
-        days: 0,
-        payment: 0
-    });
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
+
+/* =========================
+   DATA
+========================= */
+
+let roomsData = [];
+let incomeData = [];
+let receiptsData = [];
+let notesData = [];
+
+let currentUser = null;
+
+
+/* =========================
+   START
+========================= */
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    const {
+        data: { session }
+    } = await supabaseClient.auth.getSession();
+
+    if (session) {
+        currentUser = session.user;
+        showApp();
+        await loadAllData();
+        subscribeRealtime();
+    } else {
+        showLogin();
+    }
+
+    supabaseClient.auth.onAuthStateChange(
+        async (event, session) => {
+
+            if (session) {
+                currentUser = session.user;
+                showApp();
+                await loadAllData();
+                subscribeRealtime();
+            } else {
+                currentUser = null;
+                showLogin();
+            }
+
+        }
+    );
+});
+
+
+/* =========================
+   AUTH
+========================= */
+
+async function login() {
+
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const error =
+        document.getElementById("errorMessage");
+
+    error.textContent = "";
+
+    if (!email || !password) {
+        error.textContent =
+            "Введите email и пароль.";
+        return;
+    }
+
+    const { error: loginError } =
+        await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
+
+    if (loginError) {
+        error.textContent =
+            "Неверный email или пароль.";
+        console.error(loginError);
+    }
 }
 
-let incomeRecords =
-    JSON.parse(localStorage.getItem("hotelIncomeRecords")) || [];
 
-let receipts =
-    JSON.parse(localStorage.getItem("hotelReceipts")) || [];
+async function logout() {
 
-let notes =
-    JSON.parse(localStorage.getItem("hotelNotes")) || [];
-
-let selectedRoom = null;
-let selectedReceipt = null;
-
-
-/* =========================================
-   СОХРАНЕНИЕ
-========================================= */
-
-function saveData() {
-
-    localStorage.setItem(
-        "hotelRooms",
-        JSON.stringify(rooms)
-    );
-
-    localStorage.setItem(
-        "hotelIncomeRecords",
-        JSON.stringify(incomeRecords)
-    );
-
-    localStorage.setItem(
-        "hotelReceipts",
-        JSON.stringify(receipts)
-    );
-
-    localStorage.setItem(
-        "hotelNotes",
-        JSON.stringify(notes)
-    );
-
+    await supabaseClient.auth.signOut();
 }
 
 
-/* =========================================
-   ЗАГРУЗКА НОМЕРОВ
-========================================= */
+function showLogin() {
 
-const savedRooms =
-    JSON.parse(localStorage.getItem("hotelRooms"));
+    document
+        .getElementById("loginScreen")
+        .classList.remove("hidden");
 
-if (savedRooms) {
-    rooms = savedRooms;
+    document
+        .getElementById("app")
+        .classList.add("hidden");
 }
 
 
-/* =========================================
-   ОТРИСОВКА НОМЕРОВ
-========================================= */
+function showApp() {
+
+    document
+        .getElementById("loginScreen")
+        .classList.add("hidden");
+
+    document
+        .getElementById("app")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("userEmail")
+        .textContent =
+        currentUser?.email || "";
+}
+
+
+/* =========================
+   LOAD DATA
+========================= */
+
+async function loadAllData() {
+
+    try {
+
+        const rooms =
+            await supabaseClient
+                .from("rooms")
+                .select("*")
+                .order("number");
+
+        const income =
+            await supabaseClient
+                .from("income_records")
+                .select("*")
+                .order("created_at", {
+                    ascending: false
+                });
+
+        const receipts =
+            await supabaseClient
+                .from("receipts")
+                .select("*")
+                .order("created_at", {
+                    ascending: false
+                });
+
+        const notes =
+            await supabaseClient
+                .from("notes")
+                .select("*")
+                .order("created_at", {
+                    ascending: false
+                });
+
+
+        if (rooms.error) throw rooms.error;
+        if (income.error) throw income.error;
+        if (receipts.error) throw receipts.error;
+        if (notes.error) throw notes.error;
+
+
+        roomsData = rooms.data || [];
+        incomeData = income.data || [];
+        receiptsData = receipts.data || [];
+        notesData = notes.data || [];
+
+
+        renderRooms();
+        renderIncome();
+        renderReceipts();
+        renderNotes();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Не удалось загрузить данные из базы."
+        );
+    }
+}
+
+
+/* =========================
+   REALTIME
+========================= */
+
+let realtimeStarted = false;
+
+function subscribeRealtime() {
+
+    if (realtimeStarted) return;
+
+    realtimeStarted = true;
+
+    supabaseClient
+        .channel("hotel-live")
+        .on(
+            "postgres_changes",
+            {
+                event: "*",
+                schema: "public",
+                table: "rooms"
+            },
+            async () => {
+                await loadAllData();
+            }
+        )
+        .on(
+            "postgres_changes",
+            {
+                event: "*",
+                schema: "public",
+                table: "income_records"
+            },
+            async () => {
+                await loadAllData();
+            }
+        )
+        .on(
+            "postgres_changes",
+            {
+                event: "*",
+                schema: "public",
+                table: "receipts"
+            },
+            async () => {
+                await loadAllData();
+            }
+        )
+        .on(
+            "postgres_changes",
+            {
+                event: "*",
+                schema: "public",
+                table: "notes"
+            },
+            async () => {
+                await loadAllData();
+            }
+        )
+        .subscribe();
+}
+
+
+/* =========================
+   ROOMS
+========================= */
 
 function renderRooms() {
 
@@ -743,841 +821,1106 @@ function renderRooms() {
 
     container.innerHTML = "";
 
-    rooms.forEach(room => {
+    roomsData.forEach(room => {
 
-        const div = document.createElement("div");
+        const busy =
+            room.status === "busy";
+
+        const div =
+            document.createElement("div");
 
         div.className =
-            "room " + room.status;
+            `room ${busy ? "busy" : "free"}`;
 
-        if (room.status === "free") {
-
-            div.innerHTML = `
-
-                <div class="room-number">
-                    Номер ${room.number}
-                </div>
-
-                <div class="status free">
-                    Свободен
-                </div>
-
-                <div class="room-info">
-                    Номер готов к заселению
-                </div>
-
-                <div class="room-buttons">
-
-                    <button
-                        class="btn-green"
-                        onclick="openCheckIn(${room.number})">
-                        Заселить
-                    </button>
-
-                </div>
-            `;
-
-        } else {
+        if (busy) {
 
             div.innerHTML = `
-
-                <div class="room-number">
-                    Номер ${room.number}
-                </div>
+                <h3>Номер ${room.number}</h3>
 
                 <div class="status busy">
                     Занят
                 </div>
 
                 <div class="room-info">
-
                     <b>Гость:</b>
-                    ${room.guest || "Без имени"}
+                    ${escapeHTML(room.guest || "—")}
+                    <br>
+
+                    <b>Телефон:</b>
+                    ${escapeHTML(room.phone || "—")}
                     <br>
 
                     <b>Гостей:</b>
-                    ${room.guestCount}
-
+                    ${room.guest_count || 0}
                     <br>
 
-                    <b>Суток:</b>
-                    ${room.days}
-
+                    <b>Дней:</b>
+                    ${room.days || 0}
                     <br>
 
-                    <b>Оплачено:</b>
-                    ${room.payment} с
-
-                    ${
-                        room.phone
-                        ? `<br><b>Телефон:</b> ${room.phone}`
-                        : ""
-                    }
-
+                    <b>Оплата:</b>
+                    ${Number(room.payment || 0).toFixed(2)} сомони
                 </div>
 
                 <div class="room-buttons">
-
                     <button
-                        class="btn-orange"
-                        onclick="checkOut(${room.number})">
+                        class="checkout-btn"
+                        onclick="checkoutRoom(${room.number})">
                         Выселить
                     </button>
-
                 </div>
             `;
 
+        } else {
+
+            div.innerHTML = `
+                <h3>Номер ${room.number}</h3>
+
+                <div class="status free">
+                    Свободен
+                </div>
+
+                <div class="room-info">
+                    Номер свободен
+                </div>
+
+                <div class="room-buttons">
+                    <button
+                        class="checkin-btn"
+                        onclick="checkinRoom(${room.number})">
+                        Заселить
+                    </button>
+                </div>
+            `;
         }
 
         container.appendChild(div);
-
     });
-
-    updateStats();
-
 }
 
 
-/* =========================================
-   СТАТИСТИКА
-========================================= */
+/* =========================
+   CHECK-IN
+========================= */
 
-function updateStats() {
+function checkinRoom(roomNumber) {
 
-    const free =
-        rooms.filter(r => r.status === "free").length;
+    openModal(`
+        <h2>Заселение — номер ${roomNumber}</h2>
 
-    const busy =
-        rooms.filter(r => r.status === "busy").length;
+        <input
+            id="guestName"
+            placeholder="Имя гостя (необязательно)"
+        >
 
-    const today =
-        new Date().toLocaleDateString("ru-RU");
+        <input
+            id="guestPhone"
+            placeholder="Телефон (необязательно)"
+        >
 
-    const income =
-        incomeRecords
-        .filter(r => r.date === today)
-        .reduce((sum, r) => sum + Number(r.amount), 0);
+        <input
+            id="guestCount"
+            type="number"
+            min="1"
+            value="1"
+            placeholder="Количество гостей"
+        >
 
-    document.getElementById("totalRooms").textContent =
-        rooms.length;
+        <input
+            id="days"
+            type="number"
+            min="1"
+            value="1"
+            placeholder="Количество дней"
+        >
 
-    document.getElementById("freeRooms").textContent =
-        free;
+        <input
+            id="payment"
+            type="number"
+            min="0"
+            step="0.01"
+            value="0"
+            placeholder="Сколько заплатил гость"
+        >
 
-    document.getElementById("busyRooms").textContent =
-        busy;
+        <div class="modal-buttons">
+            <button
+                class="close-btn"
+                onclick="closeModal()">
+                Отмена
+            </button>
 
-    document.getElementById("todayIncome").textContent =
-        income + " с";
-
+            <button
+                class="save-btn"
+                onclick="saveCheckin(${roomNumber})">
+                Заселить
+            </button>
+        </div>
+    `);
 }
 
 
-/* =========================================
-   ЗАСЕЛЕНИЕ
-========================================= */
-
-function openCheckIn(number) {
-
-    selectedRoom = number;
-
-    document.getElementById("modalRoomNumber").value =
-        "Номер " + number;
-
-    document.getElementById("guestName").value = "";
-    document.getElementById("guestPhone").value = "";
-    document.getElementById("guestCount").value = 1;
-    document.getElementById("stayDays").value = 1;
-    document.getElementById("paymentAmount").value = "";
-
-    openModal("checkInModal");
-
-}
-
-
-function confirmCheckIn() {
-
-    const room =
-        rooms.find(r => r.number === selectedRoom);
+async function saveCheckin(roomNumber) {
 
     const guest =
-        document.getElementById("guestName").value.trim();
+        document.getElementById("guestName")
+            .value.trim();
 
     const phone =
-        document.getElementById("guestPhone").value.trim();
+        document.getElementById("guestPhone")
+            .value.trim();
 
     const guestCount =
-        Number(document.getElementById("guestCount").value);
+        Number(
+            document.getElementById("guestCount")
+                .value
+        ) || 1;
 
     const days =
-        Number(document.getElementById("stayDays").value);
+        Number(
+            document.getElementById("days")
+                .value
+        ) || 1;
 
     const payment =
-        Number(document.getElementById("paymentAmount").value);
+        Number(
+            document.getElementById("payment")
+                .value
+        ) || 0;
 
-    if (guestCount < 1) {
 
-        alert("Количество гостей должно быть минимум 1.");
+    const { error } =
+        await supabaseClient
+            .from("rooms")
+            .update({
+                status: "busy",
+                guest,
+                phone,
+                guest_count: guestCount,
+                days,
+                payment
+            })
+            .eq("number", roomNumber);
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Ошибка при заселении."
+        );
 
         return;
-
     }
 
-    if (days < 1) {
 
-        alert("Количество суток должно быть минимум 1.");
+    closeModal();
 
-        return;
-
-    }
-
-    if (payment < 0 || isNaN(payment)) {
-
-        alert("Введите сумму оплаты.");
-
-        return;
-
-    }
-
-    room.status = "busy";
-    room.guest = guest;
-    room.phone = phone;
-    room.guestCount = guestCount;
-    room.days = days;
-    room.payment = payment;
-
-    saveData();
-
-    closeModal("checkInModal");
-
-    renderRooms();
-
+    await loadAllData();
 }
 
 
-/* =========================================
-   ВЫСЕЛЕНИЕ
-========================================= */
+/* =========================
+   CHECK-OUT
+========================= */
 
-function checkOut(number) {
+async function checkoutRoom(roomNumber) {
 
     const room =
-        rooms.find(r => r.number === number);
+        roomsData.find(
+            r => r.number === roomNumber
+        );
 
     if (!room) return;
 
-    const now = new Date();
 
-    const date =
-        now.toLocaleDateString("ru-RU");
+    openModal(`
+        <h2>Выселение — номер ${roomNumber}</h2>
 
-    const time =
-        now.toLocaleTimeString("ru-RU", {
-            hour: "2-digit",
-            minute: "2-digit"
-        });
+        <p>
+            <b>Гость:</b>
+            ${escapeHTML(room.guest || "—")}
+        </p>
 
-    const id = Date.now();
+        <p>
+            <b>Гостей:</b>
+            ${room.guest_count || 0}
+        </p>
 
-    const income = {
+        <p>
+            <b>Оплата:</b>
+            ${Number(room.payment || 0).toFixed(2)}
+            сомони
+        </p>
 
-        id: id,
-        room: room.number,
-        amount: Number(room.payment),
-        date: date,
-        time: time,
-        guest: room.guest || "Без имени",
-        guestCount: room.guestCount
+        <p>
+            После выселения будет создана квитанция
+            и запись о доходе.
+        </p>
 
-    };
+        <div class="modal-buttons">
+            <button
+                class="close-btn"
+                onclick="closeModal()">
+                Отмена
+            </button>
 
-    const receipt = {
-
-        id: id,
-        room: room.number,
-        guest: room.guest || "Без имени",
-        phone: room.phone,
-        guestCount: room.guestCount,
-        days: room.days,
-        amount: Number(room.payment),
-        date: date,
-        time: time
-
-    };
-
-    incomeRecords.push(income);
-
-    receipts.push(receipt);
-
-    room.status = "free";
-    room.guest = "";
-    room.phone = "";
-    room.guestCount = 0;
-    room.days = 0;
-    room.payment = 0;
-
-    saveData();
-
-    renderRooms();
-    renderIncome();
-    renderReceipts();
-
-    showReceipt(receipt);
-
+            <button
+                class="save-btn"
+                onclick="confirmCheckout(${roomNumber})">
+                Выселить
+            </button>
+        </div>
+    `);
 }
 
 
-/* =========================================
-   ВЫРУЧКА
-========================================= */
+async function confirmCheckout(roomNumber) {
+
+    const room =
+        roomsData.find(
+            r => r.number === roomNumber
+        );
+
+    if (!room) return;
+
+
+    const amount =
+        Number(room.payment || 0);
+
+
+    /* Создаём квитанцию */
+
+    const { data: receipt, error: receiptError } =
+        await supabaseClient
+            .from("receipts")
+            .insert({
+                room_number: room.number,
+                guest: room.guest || "",
+                phone: room.phone || "",
+                guest_count: room.guest_count || 0,
+                days: room.days || 0,
+                amount
+            })
+            .select()
+            .single();
+
+
+    if (receiptError) {
+
+        console.error(receiptError);
+
+        alert(
+            "Не удалось создать квитанцию."
+        );
+
+        return;
+    }
+
+
+    /* Создаём доход */
+
+    const { error: incomeError } =
+        await supabaseClient
+            .from("income_records")
+            .insert({
+                room_number: room.number,
+                amount,
+                guest: room.guest || "",
+                guest_count: room.guest_count || 0
+            });
+
+
+    if (incomeError) {
+
+        console.error(incomeError);
+
+        alert(
+            "Квитанция создана, но доход не записался."
+        );
+
+        return;
+    }
+
+
+    /* Освобождаем номер */
+
+    const { error: roomError } =
+        await supabaseClient
+            .from("rooms")
+            .update({
+                status: "free",
+                guest: null,
+                phone: null,
+                guest_count: 0,
+                days: 0,
+                payment: 0
+            })
+            .eq("number", roomNumber);
+
+
+    if (roomError) {
+
+        console.error(roomError);
+
+        alert(
+            "Оплата сохранена, но номер не удалось освободить."
+        );
+
+        return;
+    }
+
+
+    closeModal();
+
+    await loadAllData();
+}
+
+
+/* =========================
+   INCOME
+========================= */
 
 function renderIncome() {
 
-    const container =
-        document.getElementById("incomeList");
+    const tbody =
+        document.getElementById("incomeTable");
 
-    const today =
-        new Date().toLocaleDateString("ru-RU");
+    tbody.innerHTML = "";
 
-    const records =
-        incomeRecords
-        .filter(r => r.date === today)
-        .reverse();
 
-    if (records.length === 0) {
+    let total = 0;
 
-        container.innerHTML =
-            `<div class="item-info">
-                Сегодня выручки пока нет.
-            </div>`;
 
-        return;
+    if (incomeData.length === 0) {
 
-    }
-
-    container.innerHTML = "";
-
-    records.forEach(record => {
-
-        const div =
-            document.createElement("div");
-
-        div.className = "income-item";
-
-        div.innerHTML = `
-
-            <div class="item-top">
-
-                <b>
-                    Номер ${record.room}
-                </b>
-
-                <span class="amount">
-                    ${record.amount} с
-                </span>
-
-            </div>
-
-            <div class="item-info">
-
-                Гость:
-                ${record.guest}
-
-                <br>
-
-                Гостей:
-                ${record.guestCount}
-
-                <br>
-
-                ${record.date}
-                ${record.time}
-
-            </div>
-
-            <div class="item-buttons">
-
-                <button
-                    class="btn-red"
-                    onclick="cancelIncome(${record.id})">
-                    Отменить сумму
-                </button>
-
-            </div>
-
+        tbody.innerHTML = `
+            <tr>
+                <td
+                    colspan="6"
+                    class="empty">
+                    Записей пока нет
+                </td>
+            </tr>
         `;
 
-        container.appendChild(div);
+    } else {
 
-    });
+        incomeData.forEach(item => {
 
+            total += Number(item.amount || 0);
+
+            const tr =
+                document.createElement("tr");
+
+            tr.innerHTML = `
+                <td>
+                    ${formatDate(item.created_at)}
+                </td>
+
+                <td>
+                    ${item.room_number ?? "—"}
+                </td>
+
+                <td>
+                    ${escapeHTML(item.guest || "—")}
+                </td>
+
+                <td>
+                    ${item.guest_count || 0}
+                </td>
+
+                <td>
+                    ${Number(item.amount || 0).toFixed(2)}
+                    сомони
+                </td>
+
+                <td>
+                    <button
+                        class="action-btn red"
+                        onclick="deleteIncome(${item.id})">
+                        Отменить
+                    </button>
+                </td>
+            `;
+
+            tbody.appendChild(tr);
+        });
+    }
+
+
+    document.getElementById("totalIncome")
+        .textContent =
+        total.toFixed(2);
 }
 
 
-/* =========================================
-   ОТМЕНА ВЫРУЧКИ
-========================================= */
+function openIncomeModal() {
 
-function cancelIncome(id) {
+    openModal(`
+        <h2>Добавить оплату</h2>
 
-    openConfirm(
-        "Отмена суммы",
-        "Вы действительно хотите убрать эту сумму из выручки за сегодня?",
-        function() {
+        <input
+            id="incomeRoom"
+            type="number"
+            min="1"
+            placeholder="Номер комнаты"
+        >
 
-            incomeRecords =
-                incomeRecords.filter(r => r.id !== id);
+        <input
+            id="incomeGuest"
+            placeholder="Имя гостя"
+        >
 
-            saveData();
+        <input
+            id="incomeGuestCount"
+            type="number"
+            min="1"
+            value="1"
+            placeholder="Количество гостей"
+        >
 
-            renderIncome();
-            updateStats();
+        <input
+            id="incomeAmount"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="Сумма"
+        >
 
-            closeModal("confirmModal");
+        <div class="modal-buttons">
+            <button
+                class="close-btn"
+                onclick="closeModal()">
+                Отмена
+            </button>
 
-        }
-    );
-
+            <button
+                class="save-btn"
+                onclick="saveIncome()">
+                Сохранить
+            </button>
+        </div>
+    `);
 }
 
 
-/* =========================================
-   ЧЕКИ
-========================================= */
+async function saveIncome() {
+
+    const room =
+        Number(
+            document.getElementById("incomeRoom").value
+        );
+
+    const guest =
+        document.getElementById("incomeGuest")
+            .value.trim();
+
+    const guestCount =
+        Number(
+            document.getElementById("incomeGuestCount")
+                .value
+        ) || 1;
+
+    const amount =
+        Number(
+            document.getElementById("incomeAmount")
+                .value
+        );
+
+
+    if (!amount || amount < 0) {
+
+        alert("Введите сумму.");
+
+        return;
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("income_records")
+            .insert({
+                room_number:
+                    room || null,
+                amount,
+                guest,
+                guest_count:
+                    guestCount
+            });
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Не удалось добавить оплату."
+        );
+
+        return;
+    }
+
+
+    closeModal();
+
+    await loadAllData();
+}
+
+
+async function deleteIncome(id) {
+
+    if (
+        !confirm(
+            "Отменить эту запись о доходе?"
+        )
+    ) {
+        return;
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("income_records")
+            .delete()
+            .eq("id", id);
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Не удалось удалить запись."
+        );
+
+        return;
+    }
+
+
+    await loadAllData();
+}
+
+
+/* =========================
+   RECEIPTS
+========================= */
 
 function renderReceipts() {
 
-    const container =
-        document.getElementById("receiptsList");
+    const tbody =
+        document.getElementById("receiptsTable");
 
-    if (receipts.length === 0) {
+    tbody.innerHTML = "";
 
-        container.innerHTML =
-            `<div class="item-info">
-                Сохранённых чеков пока нет.
-            </div>`;
+
+    if (receiptsData.length === 0) {
+
+        tbody.innerHTML = `
+            <tr>
+                <td
+                    colspan="7"
+                    class="empty">
+                    Квитанций пока нет
+                </td>
+            </tr>
+        `;
 
         return;
-
     }
 
-    container.innerHTML = "";
 
-    [...receipts]
-        .reverse()
-        .forEach(receipt => {
+    receiptsData.forEach(receipt => {
 
-            const div =
-                document.createElement("div");
+        const tr =
+            document.createElement("tr");
 
-            div.className = "receipt-item";
+        tr.innerHTML = `
+            <td>
+                ${formatDate(receipt.created_at)}
+            </td>
 
-            div.innerHTML = `
+            <td>
+                ${receipt.room_number ?? "—"}
+            </td>
 
-                <div class="item-top">
+            <td>
+                ${escapeHTML(receipt.guest || "—")}
+            </td>
 
-                    <b>
-                        Чек №${receipt.id}
-                    </b>
+            <td>
+                ${receipt.guest_count || 0}
+            </td>
 
-                    <span class="amount">
-                        ${receipt.amount} с
-                    </span>
+            <td>
+                ${receipt.days || 0}
+            </td>
 
-                </div>
+            <td>
+                ${Number(receipt.amount || 0).toFixed(2)}
+                сомони
+            </td>
 
-                <div class="item-info">
+            <td>
+                <button
+                    class="action-btn blue"
+                    onclick="viewReceipt(${receipt.id})">
+                    Открыть
+                </button>
 
-                    Номер ${receipt.room}
-                    · ${receipt.guest}
+                <button
+                    class="action-btn red"
+                    onclick="deleteReceipt(${receipt.id})">
+                    Удалить
+                </button>
+            </td>
+        `;
 
-                    <br>
-
-                    ${receipt.date}
-                    ${receipt.time}
-
-                </div>
-
-                <div class="item-buttons">
-
-                    <button
-                        onclick="showReceiptById(${receipt.id})">
-                        Открыть
-                    </button>
-
-                    <button
-                        class="btn-red"
-                        onclick="deleteReceipt(${receipt.id})">
-                        Удалить
-                    </button>
-
-                </div>
-            `;
-
-            container.appendChild(div);
-
-        });
-
+        tbody.appendChild(tr);
+    });
 }
 
 
-function showReceiptById(id) {
+function viewReceipt(id) {
 
     const receipt =
-        receipts.find(r => r.id === id);
+        receiptsData.find(
+            r => r.id === id
+        );
 
-    if (receipt) {
-        showReceipt(receipt);
-    }
-
-}
+    if (!receipt) return;
 
 
-function showReceipt(receipt) {
+    openModal(`
+        <h2>🧾 Квитанция</h2>
 
-    selectedReceipt = receipt;
+        <p>
+            <b>Дата:</b>
+            ${formatDate(receipt.created_at)}
+        </p>
 
-    document.getElementById("receiptContent").innerHTML = `
+        <p>
+            <b>Номер:</b>
+            ${receipt.room_number ?? "—"}
+        </p>
 
-        <div class="receipt" id="printableReceipt">
+        <p>
+            <b>Гость:</b>
+            ${escapeHTML(receipt.guest || "—")}
+        </p>
 
-            <h3>🏨 ГОСТИНИЦА</h3>
+        <p>
+            <b>Телефон:</b>
+            ${escapeHTML(receipt.phone || "—")}
+        </p>
 
-            <div class="receipt-line">
-                <span>Чек</span>
-                <b>№${receipt.id}</b>
-            </div>
+        <p>
+            <b>Количество гостей:</b>
+            ${receipt.guest_count || 0}
+        </p>
 
-            <div class="receipt-line">
-                <span>Номер</span>
-                <b>${receipt.room}</b>
-            </div>
+        <p>
+            <b>Количество дней:</b>
+            ${receipt.days || 0}
+        </p>
 
-            <div class="receipt-line">
-                <span>Гость</span>
-                <b>${receipt.guest}</b>
-            </div>
+        <p>
+            <b>Оплачено:</b>
+            ${Number(receipt.amount || 0).toFixed(2)}
+            сомони
+        </p>
 
-            <div class="receipt-line">
-                <span>Количество гостей</span>
-                <b>${receipt.guestCount}</b>
-            </div>
+        <div class="modal-buttons">
+            <button
+                class="close-btn"
+                onclick="closeModal()">
+                Закрыть
+            </button>
 
-            <div class="receipt-line">
-                <span>Суток</span>
-                <b>${receipt.days}</b>
-            </div>
-
-            ${
-                receipt.phone
-                ? `
-                <div class="receipt-line">
-                    <span>Телефон</span>
-                    <b>${receipt.phone}</b>
-                </div>
-                `
-                : ""
-            }
-
-            <div class="receipt-line">
-                <span>Дата</span>
-                <b>${receipt.date}</b>
-            </div>
-
-            <div class="receipt-line">
-                <span>Время</span>
-                <b>${receipt.time}</b>
-            </div>
-
-            <div class="receipt-line"
-                 style="font-size:18px; margin-top:8px;">
-
-                <span>Оплачено</span>
-
-                <b>
-                    ${receipt.amount} с
-                </b>
-
-            </div>
-
+            <button
+                class="save-btn"
+                onclick="printReceipt(${receipt.id})">
+                Печать
+            </button>
         </div>
-    `;
-
-    openModal("receiptModal");
-
+    `);
 }
 
 
-/* =========================================
-   УДАЛЕНИЕ ЧЕКА
-========================================= */
+function printReceipt(id) {
 
-function deleteReceipt(id) {
+    const receipt =
+        receiptsData.find(
+            r => r.id === id
+        );
 
-    openConfirm(
-        "Удаление чека",
-        "Вы действительно хотите удалить этот чек?",
-        function() {
+    if (!receipt) return;
 
-            receipts =
-                receipts.filter(r => r.id !== id);
-
-            saveData();
-
-            renderReceipts();
-
-            closeModal("confirmModal");
-
-        }
-    );
-
-}
-
-
-/* =========================================
-   ПЕЧАТЬ ЧЕКА
-========================================= */
-
-function printReceipt() {
-
-    const content =
-        document.getElementById("printableReceipt").innerHTML;
 
     const printWindow =
-        window.open("", "_blank");
+        window.open(
+            "",
+            "_blank",
+            "width=500,height=700"
+        );
+
 
     printWindow.document.write(`
-
-        <html>
-
+        <!DOCTYPE html>
+        <html lang="ru">
         <head>
-
-            <title>Чек</title>
+            <meta charset="UTF-8">
+            <title>Квитанция</title>
 
             <style>
-
                 body {
                     font-family: Arial;
-                    padding: 20px;
+                    padding: 30px;
                 }
 
-                .receipt {
-                    max-width: 400px;
-                    margin: auto;
-                }
-
-                .receipt-line {
-                    display: flex;
-                    justify-content: space-between;
-                    padding: 8px 0;
-                    border-bottom: 1px solid #ddd;
-                }
-
-                h3 {
+                h1 {
                     text-align: center;
                 }
 
-            </style>
+                p {
+                    font-size: 17px;
+                }
 
+                .total {
+                    font-size: 22px;
+                    font-weight: bold;
+                    margin-top: 25px;
+                }
+            </style>
         </head>
 
         <body>
 
-            <div class="receipt">
-                ${content}
-            </div>
+            <h1>🏨 Гостиница</h1>
+
+            <hr>
+
+            <p>
+                <b>Дата:</b>
+                ${formatDate(receipt.created_at)}
+            </p>
+
+            <p>
+                <b>Номер:</b>
+                ${receipt.room_number ?? "—"}
+            </p>
+
+            <p>
+                <b>Гость:</b>
+                ${escapeHTML(receipt.guest || "—")}
+            </p>
+
+            <p>
+                <b>Телефон:</b>
+                ${escapeHTML(receipt.phone || "—")}
+            </p>
+
+            <p>
+                <b>Гостей:</b>
+                ${receipt.guest_count || 0}
+            </p>
+
+            <p>
+                <b>Дней:</b>
+                ${receipt.days || 0}
+            </p>
+
+            <p class="total">
+                Оплачено:
+                ${Number(receipt.amount || 0).toFixed(2)}
+                сомони
+            </p>
+
+            <hr>
+
+            <p style="text-align:center">
+                Спасибо за посещение!
+            </p>
 
         </body>
-
         </html>
     `);
 
+
     printWindow.document.close();
 
+    printWindow.focus();
+
     printWindow.print();
-
 }
 
 
-/* =========================================
-   ЗАМЕТКИ
-========================================= */
+async function deleteReceipt(id) {
 
-function addNote() {
+    if (
+        !confirm(
+            "Удалить эту квитанцию?"
+        )
+    ) {
+        return;
+    }
 
-    const input =
-        document.getElementById("noteInput");
 
-    const text =
-        input.value.trim();
+    const { error } =
+        await supabaseClient
+            .from("receipts")
+            .delete()
+            .eq("id", id);
 
-    if (!text) return;
 
-    notes.push({
+    if (error) {
 
-        id: Date.now(),
+        console.error(error);
 
-        text: text,
+        alert(
+            "Не удалось удалить квитанцию."
+        );
 
-        date:
-            new Date().toLocaleDateString("ru-RU")
+        return;
+    }
 
-    });
 
-    input.value = "";
-
-    saveData();
-
-    renderNotes();
-
+    await loadAllData();
 }
 
+
+/* =========================
+   NOTES
+========================= */
 
 function renderNotes() {
 
     const container =
         document.getElementById("notesList");
 
-    if (notes.length === 0) {
-
-        container.innerHTML =
-            `<div class="item-info">
-                Заметок пока нет.
-            </div>`;
-
-        return;
-
-    }
-
     container.innerHTML = "";
 
-    [...notes]
-        .reverse()
-        .forEach(note => {
 
-            const div =
-                document.createElement("div");
+    if (notesData.length === 0) {
 
-            div.className = "note-item";
+        container.innerHTML = `
+            <div class="empty">
+                Заметок пока нет
+            </div>
+        `;
 
-            div.innerHTML = `
+        return;
+    }
 
-                <div class="item-info">
 
-                    ${note.text}
+    notesData.forEach(note => {
 
-                    <br>
+        const div =
+            document.createElement("div");
 
-                    <small>
-                        ${note.date}
-                    </small>
+        div.className = "note";
 
+        div.innerHTML = `
+            <div>
+                <div class="note-text">
+                    ${escapeHTML(note.text)}
                 </div>
 
-                <div class="item-buttons">
+                <small>
+                    ${formatDate(note.created_at)}
+                </small>
+            </div>
 
-                    <button
-                        class="btn-red"
-                        onclick="deleteNote(${note.id})">
-                        Удалить
-                    </button>
+            <button
+                class="action-btn red"
+                onclick="deleteNote(${note.id})">
+                Удалить
+            </button>
+        `;
 
-                </div>
-
-            `;
-
-            container.appendChild(div);
-
-        });
-
+        container.appendChild(div);
+    });
 }
 
 
-function deleteNote(id) {
+function openNoteModal() {
 
-    notes =
-        notes.filter(note => note.id !== id);
+    openModal(`
+        <h2>📝 Новая заметка</h2>
 
-    saveData();
+        <textarea
+            id="noteText"
+            placeholder="Например: лампочка перегорела..."
+        ></textarea>
 
-    renderNotes();
+        <div class="modal-buttons">
+            <button
+                class="close-btn"
+                onclick="closeModal()">
+                Отмена
+            </button>
 
+            <button
+                class="save-btn"
+                onclick="saveNote()">
+                Сохранить
+            </button>
+        </div>
+    `);
 }
 
 
-/* =========================================
-   МОДАЛЬНЫЕ ОКНА
-========================================= */
+async function saveNote() {
 
-function openModal(id) {
+    const text =
+        document.getElementById("noteText")
+            .value.trim();
+
+
+    if (!text) {
+
+        alert("Введите текст заметки.");
+
+        return;
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("notes")
+            .insert({
+                text
+            });
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Не удалось сохранить заметку."
+        );
+
+        return;
+    }
+
+
+    closeModal();
+
+    await loadAllData();
+}
+
+
+async function deleteNote(id) {
+
+    if (
+        !confirm(
+            "Удалить эту заметку?"
+        )
+    ) {
+        return;
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("notes")
+            .delete()
+            .eq("id", id);
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Не удалось удалить заметку."
+        );
+
+        return;
+    }
+
+
+    await loadAllData();
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+function openModal(html) {
 
     document
-        .getElementById(id)
-        .classList.add("active");
-
-}
-
-
-function closeModal(id) {
+        .getElementById("modalContent")
+        .innerHTML = html;
 
     document
-        .getElementById(id)
-        .classList.remove("active");
-
+        .getElementById("modalOverlay")
+        .classList.remove("hidden");
 }
 
 
-/* =========================================
-   ПОДТВЕРЖДЕНИЕ
-========================================= */
+function closeModal() {
 
-function openConfirm(title, text, action) {
-
-    document.getElementById("confirmTitle").textContent =
-        title;
-
-    document.getElementById("confirmText").textContent =
-        text;
-
-    document.getElementById("confirmButton").onclick =
-        action;
-
-    openModal("confirmModal");
-
+    document
+        .getElementById("modalOverlay")
+        .classList.add("hidden");
 }
 
 
-/* =========================================
-   ЗАКРЫТИЕ ПО КЛИКУ НА ФОН
-========================================= */
+document
+    .getElementById("modalOverlay")
+    .addEventListener(
+        "click",
+        function(event) {
 
-document.querySelectorAll(".modal-overlay")
-.forEach(modal => {
-
-    modal.addEventListener("click", function(event) {
-
-        if (event.target === modal) {
-
-            modal.classList.remove("active");
+            if (
+                event.target === this
+            ) {
+                closeModal();
+            }
 
         }
-
-    });
-
-});
+    );
 
 
-/* =========================================
-   ЗАПУСК
-========================================= */
+/* =========================
+   HELPERS
+========================= */
 
-renderRooms();
-renderIncome();
-renderReceipts();
-renderNotes();
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function formatDate(dateString) {
+
+    if (!dateString) return "—";
+
+    const date =
+        new Date(dateString);
+
+    return date.toLocaleString(
+        "ru-RU",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+}
 
 </script>
 
 </body>
 </html>
-
