@@ -1,0 +1,1583 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>Гостиница</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #0b1120;
+    color: #f8fafc;
+    min-height: 100vh;
+}
+
+/* ===== ШАПКА ===== */
+
+header {
+    background: #111827;
+    padding: 20px;
+    border-bottom: 1px solid #263244;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.header-info {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+/* ===== ОСНОВА ===== */
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 25px 20px;
+}
+
+/* ===== СТАТИСТИКА ===== */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat {
+    background: #111827;
+    border: 1px solid #263244;
+    border-radius: 16px;
+    padding: 18px;
+}
+
+.stat-title {
+    color: #94a3b8;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+/* ===== КНОПКИ ===== */
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 11px 16px;
+    color: white;
+    background: #2563eb;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.12);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+.btn-green {
+    background: #16a34a;
+}
+
+.btn-red {
+    background: #dc2626;
+}
+
+.btn-gray {
+    background: #374151;
+}
+
+.btn-orange {
+    background: #d97706;
+}
+
+/* ===== ЗАГОЛОВКИ ===== */
+
+.section-title {
+    font-size: 21px;
+    margin-bottom: 15px;
+}
+
+/* ===== НОМЕРА ===== */
+
+.rooms {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.room {
+    background: #111827;
+    border: 1px solid #263244;
+    border-radius: 18px;
+    padding: 18px;
+    position: relative;
+}
+
+.room.free {
+    border-color: #14532d;
+}
+
+.room.busy {
+    border-color: #7f1d1d;
+}
+
+.room-number {
+    font-size: 23px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.status.free {
+    background: #14532d;
+    color: #bbf7d0;
+}
+
+.status.busy {
+    background: #7f1d1d;
+    color: #fecaca;
+}
+
+.room-info {
+    color: #cbd5e1;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 14px;
+}
+
+.room-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.room-buttons button {
+    flex: 1;
+}
+
+/* ===== БЛОКИ ===== */
+
+.panel {
+    background: #111827;
+    border: 1px solid #263244;
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+/* ===== ВЫРУЧКА ===== */
+
+.income-item,
+.receipt-item,
+.note-item {
+    background: #0b1120;
+    border: 1px solid #263244;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+}
+
+.item-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 7px;
+}
+
+.item-info {
+    color: #94a3b8;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.amount {
+    font-weight: bold;
+    color: #4ade80;
+}
+
+.item-buttons {
+    display: flex;
+    gap: 7px;
+    margin-top: 10px;
+}
+
+/* ===== ЗАМЕТКИ ===== */
+
+.note-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.note-form input {
+    flex: 1;
+}
+
+/* ===== ПОЛЯ ===== */
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: white;
+    outline: none;
+    font-size: 15px;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #3b82f6;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* ===== МОДАЛЬНОЕ ОКНО ===== */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    width: min(500px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #111827;
+    border: 1px solid #334155;
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+    animation: modalOpen 0.2s ease;
+}
+
+@keyframes modalOpen {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-buttons button {
+    flex: 1;
+}
+
+/* ===== ЧЕК ===== */
+
+.receipt {
+    background: white;
+    color: #111;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.receipt h3 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.receipt-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+/* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
+
+@media (max-width: 800px) {
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rooms {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .header-content {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 550px) {
+
+    header {
+        padding: 15px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    .logo {
+        font-size: 21px;
+    }
+
+    .stats {
+        gap: 10px;
+    }
+
+    .stat {
+        padding: 14px;
+    }
+
+    .stat-value {
+        font-size: 21px;
+    }
+
+    .rooms {
+        grid-template-columns: 1fr;
+    }
+
+    .room {
+        padding: 16px;
+    }
+
+    .note-form {
+        flex-direction: column;
+    }
+
+    .modal {
+        padding: 19px;
+        border-radius: 18px;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+    }
+
+    button {
+        min-height: 44px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-content">
+        <div class="logo">🏨 Гостиница</div>
+        <div class="header-info">Система управления гостиницей</div>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- СТАТИСТИКА -->
+
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-title">Всего номеров</div>
+            <div class="stat-value" id="totalRooms">12</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-title">Свободно</div>
+            <div class="stat-value" id="freeRooms">12</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-title">Занято</div>
+            <div class="stat-value" id="busyRooms">0</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-title">Выручка сегодня</div>
+            <div class="stat-value" id="todayIncome">0 с</div>
+        </div>
+
+    </div>
+
+    <!-- НОМЕРА -->
+
+    <div class="section-title">Номера</div>
+
+    <div class="rooms" id="rooms"></div>
+
+    <!-- ВЫРУЧКА -->
+
+    <div class="panel">
+
+        <div class="section-title">💰 Выручка за сегодня</div>
+
+        <div id="incomeList"></div>
+
+    </div>
+
+    <!-- ЧЕКИ -->
+
+    <div class="panel">
+
+        <div class="section-title">🧾 Сохранённые чеки</div>
+
+        <div id="receiptsList"></div>
+
+    </div>
+
+    <!-- ЗАМЕТКИ -->
+
+    <div class="panel">
+
+        <div class="section-title">📝 Заметки по гостинице</div>
+
+        <div class="note-form">
+            <input
+                id="noteInput"
+                type="text"
+                placeholder="Например: в номере №4 перегорела лампа"
+            >
+            <button onclick="addNote()">Добавить</button>
+        </div>
+
+        <div id="notesList"></div>
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- ОКНО ЗАСЕЛЕНИЯ -->
+<!-- ========================= -->
+
+<div class="modal-overlay" id="checkInModal">
+
+    <div class="modal">
+
+        <h2>🏨 Заселение</h2>
+
+        <div class="form-group">
+            <label>Номер</label>
+            <input id="modalRoomNumber" disabled>
+        </div>
+
+        <div class="form-group">
+            <label>Имя гостя — необязательно</label>
+            <input
+                id="guestName"
+                type="text"
+                placeholder="Например: Али"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Телефон — необязательно</label>
+            <input
+                id="guestPhone"
+                type="tel"
+                placeholder="+992..."
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Количество гостей</label>
+            <input
+                id="guestCount"
+                type="number"
+                min="1"
+                value="1"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Количество суток</label>
+            <input
+                id="stayDays"
+                type="number"
+                min="1"
+                value="1"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Сколько гость реально заплатил</label>
+            <input
+                id="paymentAmount"
+                type="number"
+                min="0"
+                placeholder="Например: 250"
+            >
+        </div>
+
+        <div class="modal-buttons">
+            <button class="btn-gray" onclick="closeModal('checkInModal')">
+                Отмена
+            </button>
+
+            <button class="btn-green" onclick="confirmCheckIn()">
+                Заселить
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- ОКНО ЧЕКА -->
+<!-- ========================= -->
+
+<div class="modal-overlay" id="receiptModal">
+
+    <div class="modal">
+
+        <h2>🧾 Чек</h2>
+
+        <div id="receiptContent"></div>
+
+        <div class="modal-buttons">
+
+            <button class="btn-gray" onclick="closeModal('receiptModal')">
+                Закрыть
+            </button>
+
+            <button onclick="printReceipt()">
+                🖨 Печать
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- ОКНО ПОДТВЕРЖДЕНИЯ -->
+<!-- ========================= -->
+
+<div class="modal-overlay" id="confirmModal">
+
+    <div class="modal">
+
+        <h2 id="confirmTitle">Подтверждение</h2>
+
+        <p id="confirmText" style="color:#cbd5e1; line-height:1.6;"></p>
+
+        <div class="modal-buttons">
+
+            <button class="btn-gray" onclick="closeModal('confirmModal')">
+                Отмена
+            </button>
+
+            <button class="btn-red" id="confirmButton">
+                Подтвердить
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* =========================================
+   ДАННЫЕ
+========================================= */
+
+let rooms = [];
+
+for (let i = 1; i <= 12; i++) {
+
+    rooms.push({
+        number: i,
+        status: "free",
+        guest: "",
+        phone: "",
+        guestCount: 0,
+        days: 0,
+        payment: 0
+    });
+
+}
+
+let incomeRecords =
+    JSON.parse(localStorage.getItem("hotelIncomeRecords")) || [];
+
+let receipts =
+    JSON.parse(localStorage.getItem("hotelReceipts")) || [];
+
+let notes =
+    JSON.parse(localStorage.getItem("hotelNotes")) || [];
+
+let selectedRoom = null;
+let selectedReceipt = null;
+
+
+/* =========================================
+   СОХРАНЕНИЕ
+========================================= */
+
+function saveData() {
+
+    localStorage.setItem(
+        "hotelRooms",
+        JSON.stringify(rooms)
+    );
+
+    localStorage.setItem(
+        "hotelIncomeRecords",
+        JSON.stringify(incomeRecords)
+    );
+
+    localStorage.setItem(
+        "hotelReceipts",
+        JSON.stringify(receipts)
+    );
+
+    localStorage.setItem(
+        "hotelNotes",
+        JSON.stringify(notes)
+    );
+
+}
+
+
+/* =========================================
+   ЗАГРУЗКА НОМЕРОВ
+========================================= */
+
+const savedRooms =
+    JSON.parse(localStorage.getItem("hotelRooms"));
+
+if (savedRooms) {
+    rooms = savedRooms;
+}
+
+
+/* =========================================
+   ОТРИСОВКА НОМЕРОВ
+========================================= */
+
+function renderRooms() {
+
+    const container =
+        document.getElementById("rooms");
+
+    container.innerHTML = "";
+
+    rooms.forEach(room => {
+
+        const div = document.createElement("div");
+
+        div.className =
+            "room " + room.status;
+
+        if (room.status === "free") {
+
+            div.innerHTML = `
+
+                <div class="room-number">
+                    Номер ${room.number}
+                </div>
+
+                <div class="status free">
+                    Свободен
+                </div>
+
+                <div class="room-info">
+                    Номер готов к заселению
+                </div>
+
+                <div class="room-buttons">
+
+                    <button
+                        class="btn-green"
+                        onclick="openCheckIn(${room.number})">
+                        Заселить
+                    </button>
+
+                </div>
+            `;
+
+        } else {
+
+            div.innerHTML = `
+
+                <div class="room-number">
+                    Номер ${room.number}
+                </div>
+
+                <div class="status busy">
+                    Занят
+                </div>
+
+                <div class="room-info">
+
+                    <b>Гость:</b>
+                    ${room.guest || "Без имени"}
+                    <br>
+
+                    <b>Гостей:</b>
+                    ${room.guestCount}
+
+                    <br>
+
+                    <b>Суток:</b>
+                    ${room.days}
+
+                    <br>
+
+                    <b>Оплачено:</b>
+                    ${room.payment} с
+
+                    ${
+                        room.phone
+                        ? `<br><b>Телефон:</b> ${room.phone}`
+                        : ""
+                    }
+
+                </div>
+
+                <div class="room-buttons">
+
+                    <button
+                        class="btn-orange"
+                        onclick="checkOut(${room.number})">
+                        Выселить
+                    </button>
+
+                </div>
+            `;
+
+        }
+
+        container.appendChild(div);
+
+    });
+
+    updateStats();
+
+}
+
+
+/* =========================================
+   СТАТИСТИКА
+========================================= */
+
+function updateStats() {
+
+    const free =
+        rooms.filter(r => r.status === "free").length;
+
+    const busy =
+        rooms.filter(r => r.status === "busy").length;
+
+    const today =
+        new Date().toLocaleDateString("ru-RU");
+
+    const income =
+        incomeRecords
+        .filter(r => r.date === today)
+        .reduce((sum, r) => sum + Number(r.amount), 0);
+
+    document.getElementById("totalRooms").textContent =
+        rooms.length;
+
+    document.getElementById("freeRooms").textContent =
+        free;
+
+    document.getElementById("busyRooms").textContent =
+        busy;
+
+    document.getElementById("todayIncome").textContent =
+        income + " с";
+
+}
+
+
+/* =========================================
+   ЗАСЕЛЕНИЕ
+========================================= */
+
+function openCheckIn(number) {
+
+    selectedRoom = number;
+
+    document.getElementById("modalRoomNumber").value =
+        "Номер " + number;
+
+    document.getElementById("guestName").value = "";
+    document.getElementById("guestPhone").value = "";
+    document.getElementById("guestCount").value = 1;
+    document.getElementById("stayDays").value = 1;
+    document.getElementById("paymentAmount").value = "";
+
+    openModal("checkInModal");
+
+}
+
+
+function confirmCheckIn() {
+
+    const room =
+        rooms.find(r => r.number === selectedRoom);
+
+    const guest =
+        document.getElementById("guestName").value.trim();
+
+    const phone =
+        document.getElementById("guestPhone").value.trim();
+
+    const guestCount =
+        Number(document.getElementById("guestCount").value);
+
+    const days =
+        Number(document.getElementById("stayDays").value);
+
+    const payment =
+        Number(document.getElementById("paymentAmount").value);
+
+    if (guestCount < 1) {
+
+        alert("Количество гостей должно быть минимум 1.");
+
+        return;
+
+    }
+
+    if (days < 1) {
+
+        alert("Количество суток должно быть минимум 1.");
+
+        return;
+
+    }
+
+    if (payment < 0 || isNaN(payment)) {
+
+        alert("Введите сумму оплаты.");
+
+        return;
+
+    }
+
+    room.status = "busy";
+    room.guest = guest;
+    room.phone = phone;
+    room.guestCount = guestCount;
+    room.days = days;
+    room.payment = payment;
+
+    saveData();
+
+    closeModal("checkInModal");
+
+    renderRooms();
+
+}
+
+
+/* =========================================
+   ВЫСЕЛЕНИЕ
+========================================= */
+
+function checkOut(number) {
+
+    const room =
+        rooms.find(r => r.number === number);
+
+    if (!room) return;
+
+    const now = new Date();
+
+    const date =
+        now.toLocaleDateString("ru-RU");
+
+    const time =
+        now.toLocaleTimeString("ru-RU", {
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+
+    const id = Date.now();
+
+    const income = {
+
+        id: id,
+        room: room.number,
+        amount: Number(room.payment),
+        date: date,
+        time: time,
+        guest: room.guest || "Без имени",
+        guestCount: room.guestCount
+
+    };
+
+    const receipt = {
+
+        id: id,
+        room: room.number,
+        guest: room.guest || "Без имени",
+        phone: room.phone,
+        guestCount: room.guestCount,
+        days: room.days,
+        amount: Number(room.payment),
+        date: date,
+        time: time
+
+    };
+
+    incomeRecords.push(income);
+
+    receipts.push(receipt);
+
+    room.status = "free";
+    room.guest = "";
+    room.phone = "";
+    room.guestCount = 0;
+    room.days = 0;
+    room.payment = 0;
+
+    saveData();
+
+    renderRooms();
+    renderIncome();
+    renderReceipts();
+
+    showReceipt(receipt);
+
+}
+
+
+/* =========================================
+   ВЫРУЧКА
+========================================= */
+
+function renderIncome() {
+
+    const container =
+        document.getElementById("incomeList");
+
+    const today =
+        new Date().toLocaleDateString("ru-RU");
+
+    const records =
+        incomeRecords
+        .filter(r => r.date === today)
+        .reverse();
+
+    if (records.length === 0) {
+
+        container.innerHTML =
+            `<div class="item-info">
+                Сегодня выручки пока нет.
+            </div>`;
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+    records.forEach(record => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "income-item";
+
+        div.innerHTML = `
+
+            <div class="item-top">
+
+                <b>
+                    Номер ${record.room}
+                </b>
+
+                <span class="amount">
+                    ${record.amount} с
+                </span>
+
+            </div>
+
+            <div class="item-info">
+
+                Гость:
+                ${record.guest}
+
+                <br>
+
+                Гостей:
+                ${record.guestCount}
+
+                <br>
+
+                ${record.date}
+                ${record.time}
+
+            </div>
+
+            <div class="item-buttons">
+
+                <button
+                    class="btn-red"
+                    onclick="cancelIncome(${record.id})">
+                    Отменить сумму
+                </button>
+
+            </div>
+
+        `;
+
+        container.appendChild(div);
+
+    });
+
+}
+
+
+/* =========================================
+   ОТМЕНА ВЫРУЧКИ
+========================================= */
+
+function cancelIncome(id) {
+
+    openConfirm(
+        "Отмена суммы",
+        "Вы действительно хотите убрать эту сумму из выручки за сегодня?",
+        function() {
+
+            incomeRecords =
+                incomeRecords.filter(r => r.id !== id);
+
+            saveData();
+
+            renderIncome();
+            updateStats();
+
+            closeModal("confirmModal");
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   ЧЕКИ
+========================================= */
+
+function renderReceipts() {
+
+    const container =
+        document.getElementById("receiptsList");
+
+    if (receipts.length === 0) {
+
+        container.innerHTML =
+            `<div class="item-info">
+                Сохранённых чеков пока нет.
+            </div>`;
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+    [...receipts]
+        .reverse()
+        .forEach(receipt => {
+
+            const div =
+                document.createElement("div");
+
+            div.className = "receipt-item";
+
+            div.innerHTML = `
+
+                <div class="item-top">
+
+                    <b>
+                        Чек №${receipt.id}
+                    </b>
+
+                    <span class="amount">
+                        ${receipt.amount} с
+                    </span>
+
+                </div>
+
+                <div class="item-info">
+
+                    Номер ${receipt.room}
+                    · ${receipt.guest}
+
+                    <br>
+
+                    ${receipt.date}
+                    ${receipt.time}
+
+                </div>
+
+                <div class="item-buttons">
+
+                    <button
+                        onclick="showReceiptById(${receipt.id})">
+                        Открыть
+                    </button>
+
+                    <button
+                        class="btn-red"
+                        onclick="deleteReceipt(${receipt.id})">
+                        Удалить
+                    </button>
+
+                </div>
+            `;
+
+            container.appendChild(div);
+
+        });
+
+}
+
+
+function showReceiptById(id) {
+
+    const receipt =
+        receipts.find(r => r.id === id);
+
+    if (receipt) {
+        showReceipt(receipt);
+    }
+
+}
+
+
+function showReceipt(receipt) {
+
+    selectedReceipt = receipt;
+
+    document.getElementById("receiptContent").innerHTML = `
+
+        <div class="receipt" id="printableReceipt">
+
+            <h3>🏨 ГОСТИНИЦА</h3>
+
+            <div class="receipt-line">
+                <span>Чек</span>
+                <b>№${receipt.id}</b>
+            </div>
+
+            <div class="receipt-line">
+                <span>Номер</span>
+                <b>${receipt.room}</b>
+            </div>
+
+            <div class="receipt-line">
+                <span>Гость</span>
+                <b>${receipt.guest}</b>
+            </div>
+
+            <div class="receipt-line">
+                <span>Количество гостей</span>
+                <b>${receipt.guestCount}</b>
+            </div>
+
+            <div class="receipt-line">
+                <span>Суток</span>
+                <b>${receipt.days}</b>
+            </div>
+
+            ${
+                receipt.phone
+                ? `
+                <div class="receipt-line">
+                    <span>Телефон</span>
+                    <b>${receipt.phone}</b>
+                </div>
+                `
+                : ""
+            }
+
+            <div class="receipt-line">
+                <span>Дата</span>
+                <b>${receipt.date}</b>
+            </div>
+
+            <div class="receipt-line">
+                <span>Время</span>
+                <b>${receipt.time}</b>
+            </div>
+
+            <div class="receipt-line"
+                 style="font-size:18px; margin-top:8px;">
+
+                <span>Оплачено</span>
+
+                <b>
+                    ${receipt.amount} с
+                </b>
+
+            </div>
+
+        </div>
+    `;
+
+    openModal("receiptModal");
+
+}
+
+
+/* =========================================
+   УДАЛЕНИЕ ЧЕКА
+========================================= */
+
+function deleteReceipt(id) {
+
+    openConfirm(
+        "Удаление чека",
+        "Вы действительно хотите удалить этот чек?",
+        function() {
+
+            receipts =
+                receipts.filter(r => r.id !== id);
+
+            saveData();
+
+            renderReceipts();
+
+            closeModal("confirmModal");
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   ПЕЧАТЬ ЧЕКА
+========================================= */
+
+function printReceipt() {
+
+    const content =
+        document.getElementById("printableReceipt").innerHTML;
+
+    const printWindow =
+        window.open("", "_blank");
+
+    printWindow.document.write(`
+
+        <html>
+
+        <head>
+
+            <title>Чек</title>
+
+            <style>
+
+                body {
+                    font-family: Arial;
+                    padding: 20px;
+                }
+
+                .receipt {
+                    max-width: 400px;
+                    margin: auto;
+                }
+
+                .receipt-line {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 8px 0;
+                    border-bottom: 1px solid #ddd;
+                }
+
+                h3 {
+                    text-align: center;
+                }
+
+            </style>
+
+        </head>
+
+        <body>
+
+            <div class="receipt">
+                ${content}
+            </div>
+
+        </body>
+
+        </html>
+    `);
+
+    printWindow.document.close();
+
+    printWindow.print();
+
+}
+
+
+/* =========================================
+   ЗАМЕТКИ
+========================================= */
+
+function addNote() {
+
+    const input =
+        document.getElementById("noteInput");
+
+    const text =
+        input.value.trim();
+
+    if (!text) return;
+
+    notes.push({
+
+        id: Date.now(),
+
+        text: text,
+
+        date:
+            new Date().toLocaleDateString("ru-RU")
+
+    });
+
+    input.value = "";
+
+    saveData();
+
+    renderNotes();
+
+}
+
+
+function renderNotes() {
+
+    const container =
+        document.getElementById("notesList");
+
+    if (notes.length === 0) {
+
+        container.innerHTML =
+            `<div class="item-info">
+                Заметок пока нет.
+            </div>`;
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+    [...notes]
+        .reverse()
+        .forEach(note => {
+
+            const div =
+                document.createElement("div");
+
+            div.className = "note-item";
+
+            div.innerHTML = `
+
+                <div class="item-info">
+
+                    ${note.text}
+
+                    <br>
+
+                    <small>
+                        ${note.date}
+                    </small>
+
+                </div>
+
+                <div class="item-buttons">
+
+                    <button
+                        class="btn-red"
+                        onclick="deleteNote(${note.id})">
+                        Удалить
+                    </button>
+
+                </div>
+
+            `;
+
+            container.appendChild(div);
+
+        });
+
+}
+
+
+function deleteNote(id) {
+
+    notes =
+        notes.filter(note => note.id !== id);
+
+    saveData();
+
+    renderNotes();
+
+}
+
+
+/* =========================================
+   МОДАЛЬНЫЕ ОКНА
+========================================= */
+
+function openModal(id) {
+
+    document
+        .getElementById(id)
+        .classList.add("active");
+
+}
+
+
+function closeModal(id) {
+
+    document
+        .getElementById(id)
+        .classList.remove("active");
+
+}
+
+
+/* =========================================
+   ПОДТВЕРЖДЕНИЕ
+========================================= */
+
+function openConfirm(title, text, action) {
+
+    document.getElementById("confirmTitle").textContent =
+        title;
+
+    document.getElementById("confirmText").textContent =
+        text;
+
+    document.getElementById("confirmButton").onclick =
+        action;
+
+    openModal("confirmModal");
+
+}
+
+
+/* =========================================
+   ЗАКРЫТИЕ ПО КЛИКУ НА ФОН
+========================================= */
+
+document.querySelectorAll(".modal-overlay")
+.forEach(modal => {
+
+    modal.addEventListener("click", function(event) {
+
+        if (event.target === modal) {
+
+            modal.classList.remove("active");
+
+        }
+
+    });
+
+});
+
+
+/* =========================================
+   ЗАПУСК
+========================================= */
+
+renderRooms();
+renderIncome();
+renderReceipts();
+renderNotes();
+
+</script>
+
+</body>
+</html>
+
